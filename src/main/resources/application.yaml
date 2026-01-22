@@ -3,9 +3,9 @@ spring:
     name: Expense-Tracker-Backend-Java
 
   datasource:
-    # url: jdbc:postgresql://<HOST>:<PORT>/<DB_NAME>
-    # username: <DB_USERNAME>
-    # password: <DB_PASSWORD>
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:Expense-Tracker-Backend-Java}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -23,5 +23,5 @@ spring:
 
 
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
 
