@@ -10,14 +10,17 @@ spring:
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
-
-    hibernate:
-      ddl-auto: update
 
     properties:
       hibernate:
         format_sql: true
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+#    default-schema: public
+#    drop-first: false
+
 
 server:
   port: 8080
