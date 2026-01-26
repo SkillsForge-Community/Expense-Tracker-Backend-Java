@@ -1,4 +1,4 @@
-package com.SkillsForge.Expense_Tracker_Backend_Java;
+package com.SkillsForge.expensetracker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

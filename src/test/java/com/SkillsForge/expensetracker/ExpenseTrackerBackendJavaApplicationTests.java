@@ -1,4 +1,4 @@
-package com.SkillsForge.Expense_Tracker_Backend_Java;
+package com.SkillsForge.expensetracker;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
