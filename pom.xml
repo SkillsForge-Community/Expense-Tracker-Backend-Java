@@ -54,6 +54,15 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+        <!-- DB MIGRATION -->
+        <!-- Source: https://mvnrepository.com/artifact/org.liquibase/liquibase-core -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>5.0.1</version>
+            <scope>compile</scope>
+        </dependency>
 	</dependencies>
 
 	<build>
