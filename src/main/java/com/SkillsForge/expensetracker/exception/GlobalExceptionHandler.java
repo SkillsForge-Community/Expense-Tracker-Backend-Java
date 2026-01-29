@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(TransactionNotFoundException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleTransactionNotFoundException(
-            TransactionNotFoundException ex,
+            ResourceNotFoundException ex,
             HttpServletRequest request) {
 
         log.error("Transaction not found: {}", ex.getMessage());

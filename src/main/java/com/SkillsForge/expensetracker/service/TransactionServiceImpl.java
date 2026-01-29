@@ -1,7 +1,7 @@
 package com.SkillsForge.expensetracker.service;
 
 import com.SkillsForge.expensetracker.dto.CreateTransactionRequest;
-import com.SkillsForge.expensetracker.exception.TransactionNotFoundException;
+import com.SkillsForge.expensetracker.exception.ResourceNotFoundException;
 import com.SkillsForge.expensetracker.persistence.entity.Transaction;
 import com.SkillsForge.expensetracker.persistence.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +51,7 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Transaction not found with ID: {}", id);
-                    return new TransactionNotFoundException(id);
+                    return new ResourceNotFoundException(id);
                 });
     }
 }
