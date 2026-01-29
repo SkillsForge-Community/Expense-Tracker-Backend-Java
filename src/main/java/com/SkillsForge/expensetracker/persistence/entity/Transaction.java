@@ -40,11 +40,11 @@ public class Transaction extends BaseEntity {
   private Long amount; //We save amount in kobo value so 1 naira will be saved as 100. 1.50 naira will be saved as 150
 
     // constructor to accept dto
-    public Transaction (CreateTransactionRequest dto){
-        this.description = dto.description();
-        this.type = dto.type();
-        this.category = dto.category();
-        this.date = dto.date();
-        this.amount = dto.amount();
+    public Transaction (CreateTransactionRequest request){
+        this.description = request.getDescription();
+        this.type = request.getType();
+        this.category = request.getCategory();
+        this.date = request.getDate();
+        this.amount = request.getAmount();
     }
 }
