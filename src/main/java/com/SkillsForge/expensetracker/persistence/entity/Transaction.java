@@ -2,6 +2,7 @@ package com.SkillsForge.expensetracker.persistence.entity;
 
 import com.SkillsForge.expensetracker.app.enums.TransactionCategory;
 import com.SkillsForge.expensetracker.app.enums.TransactionType;
+import com.SkillsForge.expensetracker.dto.TransactionDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -37,4 +38,13 @@ public class Transaction extends BaseEntity {
 
   @Column(nullable = false)
   private Long amount; //We save amount in kobo value so 1 naira will be saved as 100. 1.50 naira will be saved as 150
+
+    // constructor to accept dto
+    public Transaction (TransactionDto dto){
+        this.description = dto.description();
+        this.type = dto.type();
+        this.category = dto.category();
+        this.date = dto.date();
+        this.amount = dto.amount();
+    }
 }
