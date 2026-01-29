@@ -17,30 +17,30 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "api/v1/transaction")
 
 public class TransactionController {
-  private final TransactionService transactionService;
+    private final TransactionService transactionService;
 
-  @PostMapping
-  public ResponseEntity<TransactionDto> createTransaction(
-      @Valid @RequestBody CreateTransactionRequest request) {
+    @PostMapping
+    public ResponseEntity<TransactionDto> createTransaction(
+            @Valid @RequestBody CreateTransactionRequest request) {
 
-    log.info("Received request to create transaction: {}", request.getDescription());
+        log.info("Received request to create transaction: {}", request.getDescription());
 
-    Transaction transaction = transactionService.createTransaction(request);
-    TransactionDto response = TransactionDto.fromEntity(transaction);
+        Transaction transaction = transactionService.createTransaction(request);
+        TransactionDto response = TransactionDto.fromEntity(transaction);
 
-    log.info("Transaction created successfully with ID: {}", response.getId());
+        log.info("Transaction created successfully with ID: {}", response.getId());
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
-  }
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<TransactionDto> getTransactionById(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<TransactionDto> getTransactionById(@PathVariable Long id) {
 
-    log.info("Received request to fetch transaction with ID: {}", id);
+        log.info("Received request to fetch transaction with ID: {}", id);
 
-    Transaction transaction = transactionService.getTransactionById(id);
-    TransactionDto response = TransactionDto.fromEntity(transaction);
+        Transaction transaction = transactionService.getTransactionById(id);
+        TransactionDto response = TransactionDto.fromEntity(transaction);
 
-    return ResponseEntity.ok(response);
-  }
+        return ResponseEntity.ok(response);
+    }
 }
