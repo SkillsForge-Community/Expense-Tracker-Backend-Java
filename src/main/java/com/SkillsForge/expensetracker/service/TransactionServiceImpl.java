@@ -51,7 +51,7 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Transaction not found with ID: {}", id);
-                    return new ResourceNotFoundException(id);
+                    return new ResourceNotFoundException("Transaction not found with ID: " + id);
                 });
     }
 }
