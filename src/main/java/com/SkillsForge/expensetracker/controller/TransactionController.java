@@ -1,5 +1,6 @@
 package com.SkillsForge.expensetracker.controller;
 
+import com.SkillsForge.expensetracker.dto.CreateTransactionRequest;
 import com.SkillsForge.expensetracker.dto.TransactionDto;
 import com.SkillsForge.expensetracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping
-    public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto request) {
+    public ResponseEntity<TransactionDto> createTransaction(@RequestBody CreateTransactionRequest request) {
         TransactionDto response = transactionService.createTransaction(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

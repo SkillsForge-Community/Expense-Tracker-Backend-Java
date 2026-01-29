@@ -4,11 +4,9 @@ import com.SkillsForge.expensetracker.app.enums.TransactionCategory;
 import com.SkillsForge.expensetracker.app.enums.TransactionType;
 import com.SkillsForge.expensetracker.persistence.entity.Transaction;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public record TransactionDto(
         @NotBlank(message = "Description is required")
