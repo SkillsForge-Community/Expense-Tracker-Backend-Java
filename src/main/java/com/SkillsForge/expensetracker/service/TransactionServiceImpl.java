@@ -1,10 +1,11 @@
 package com.SkillsForge.expensetracker.service;
 
 
-import com.SkillsForge.expensetracker.app.enums.TransactionCategory;
-import com.SkillsForge.expensetracker.app.enums.TransactionType;
+import com.SkillsForge.expensetracker.app.dto.TransactionUpdateRequest;
+import com.SkillsForge.expensetracker.app.filter.TransactionFilter;
 import com.SkillsForge.expensetracker.persistence.entity.Transaction;
 import com.SkillsForge.expensetracker.persistence.repository.TransactionRepository;
+import com.SkillsForge.expensetracker.persistence.specification.TransactionSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,41 +24,31 @@ public class TransactionServiceImpl implements TransactionService{
     private final TransactionRepository transactionRepository;
 
     @Override
-    public Transaction updateTransaction(Long id, Transaction transaction) {
+    public Transaction updateTransaction(Long id, TransactionUpdateRequest request) {
 
-        // fetch existing transaction by id or throw error
-        Transaction existingTransaction = transactionRepository.findById(id)
+        Transaction existing = transactionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found"));
 
-        // update only allowed fields
-        existingTransaction
-                .setDescription(transaction.getDescription())
-                .setAmount(transaction.getAmount())
-                .setCategory(transaction.getCategory())
-                .setType(transaction.getType())
-                .setDate(transaction.getDate());
+        existing.setDescription(request.getDescription());
+        existing.setCategory(request.getCategory());
+        existing.setType(request.getType());
+        existing.setAmount(request.getAmount());
+        existing.setDate(request.getDate());
+        existing.setUpdatedAt(LocalDateTime.now());
 
-        // update the edited fields
-        existingTransaction.setUpdatedAt(LocalDateTime.now());
-
-        // save back to db
-        return transactionRepository.save(existingTransaction);
+        return transactionRepository.save(existing);
     }
 
     @Override
     public Page<Transaction> getAllTransactions(
-            TransactionCategory category,
-            TransactionType type,
+            TransactionFilter filter,
             Pageable pageable
     ) {
-
-        if (category != null && type != null) {
-            return transactionRepository.findByCategoryAndType(category, type, pageable);
-        }
-
-        return transactionRepository.findAll(pageable);
+        return transactionRepository.findAll(
+                TransactionSpecification.withFilters(filter),
+                pageable
+        );
     }
-
 
 
 }

@@ -1,7 +1,9 @@
 package com.SkillsForge.expensetracker.controller;
 
+import com.SkillsForge.expensetracker.app.dto.TransactionUpdateRequest;
 import com.SkillsForge.expensetracker.app.enums.TransactionCategory;
 import com.SkillsForge.expensetracker.app.enums.TransactionType;
+import com.SkillsForge.expensetracker.app.filter.TransactionFilter;
 import com.SkillsForge.expensetracker.persistence.entity.Transaction;
 import com.SkillsForge.expensetracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -12,29 +14,24 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "api/v1/transaction")
+@RequestMapping("/api/v1/transactions")
 public class TransactionController {
+
   private final TransactionService transactionService;
 
-//  update a transaction by id
   @PutMapping("/{id}")
   public Transaction updateTransaction(
           @PathVariable Long id,
-          @RequestBody Transaction transaction
+          @RequestBody TransactionUpdateRequest request
   ) {
-    return transactionService.updateTransaction(id, transaction);
+    return transactionService.updateTransaction(id, request);
   }
 
-//  fetch all transactions with pagination and optional filters
   @GetMapping
   public Page<Transaction> getAllTransactions(
-          @RequestParam(defaultValue = "0") int page,
-          @RequestParam(defaultValue = "10") int size,
-          @RequestParam(required = false) TransactionCategory category,
-          @RequestParam(required = false) TransactionType type
+          @ModelAttribute TransactionFilter filter,
+          Pageable pageable
   ) {
-    Pageable pageable = PageRequest.of(page, size);
-    return transactionService.getAllTransactions(category, type, pageable);
+    return transactionService.getAllTransactions(filter, pageable);
   }
-
 }
