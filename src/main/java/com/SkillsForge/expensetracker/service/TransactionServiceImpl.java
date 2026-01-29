@@ -34,13 +34,13 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional(readOnly = true)
-    public Transaction getTransactionById(Long id) {
+    public TransactionDto getTransactionById(Long id) {
         log.info("Fetching transaction with ID: {}", id);
 
-        return transactionRepository.findById(id)
+        return TransactionDto.fromEntity(transactionRepository.findById(id)
                 .orElseThrow(() -> {
                     log.error("Transaction not found with ID: {}", id);
                     return new ResourceNotFoundException("Transaction not found with ID: " + id);
-                });
+                }));
     }
 }
