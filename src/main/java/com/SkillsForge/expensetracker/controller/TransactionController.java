@@ -1,10 +1,8 @@
 package com.SkillsForge.expensetracker.controller;
 
-import com.SkillsForge.expensetracker.dto.CreateTransactionRequest;
 import com.SkillsForge.expensetracker.dto.TransactionDto;
 import com.SkillsForge.expensetracker.persistence.entity.Transaction;
 import com.SkillsForge.expensetracker.service.TransactionService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,26 +19,15 @@ public class TransactionController {
 
     @PostMapping
     public ResponseEntity<TransactionDto> createTransaction(
-            @Valid @RequestBody CreateTransactionRequest request) {
-
-        log.info("Received request to create transaction: {}", request.getDescription());
-
-        Transaction transaction = transactionService.createTransaction(request);
-        TransactionDto response = TransactionDto.fromEntity(transaction);
-
-        log.info("Transaction created successfully with ID: {}", response.getId());
-
+            @RequestBody TransactionDto request) {
+        TransactionDto response = transactionService.createTransaction(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TransactionDto> getTransactionById(@PathVariable Long id) {
-
-        log.info("Received request to fetch transaction with ID: {}", id);
-
         Transaction transaction = transactionService.getTransactionById(id);
-        TransactionDto response = TransactionDto.fromEntity(transaction);
-
+        TransactionDto response = TransactionDto.fromEntity(transactionService.getTransactionById(id));
         return ResponseEntity.ok(response);
     }
 }
