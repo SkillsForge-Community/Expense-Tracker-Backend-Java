@@ -1,5 +1,6 @@
 package com.SkillsForge.expensetracker.service;
 
+import com.SkillsForge.expensetracker.dto.CreateTransactionRequest;
 import com.SkillsForge.expensetracker.dto.TransactionDto;
 import com.SkillsForge.expensetracker.exception.ResourceNotFoundException;
 import com.SkillsForge.expensetracker.persistence.entity.Transaction;
@@ -20,10 +21,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    public TransactionDto createTransaction(TransactionDto dto) {
+    public TransactionDto createTransaction(CreateTransactionRequest request) {
         LocalDateTime now = LocalDateTime.now();
 
-        Transaction transaction = new Transaction(dto);
+        Transaction transaction = new Transaction(request);
         transaction.setCreatedAt(now);
         transaction.setUpdatedAt(now);
 
