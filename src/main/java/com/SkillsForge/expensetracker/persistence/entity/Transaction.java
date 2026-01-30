@@ -4,14 +4,13 @@ import com.SkillsForge.expensetracker.app.enums.TransactionCategory;
 import com.SkillsForge.expensetracker.app.enums.TransactionType;
 import com.SkillsForge.expensetracker.dto.CreateTransactionRequest;
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
-
-import java.time.LocalDate;
 
 @Accessors(chain = true)
 @Entity
@@ -34,17 +33,18 @@ public class Transaction extends BaseEntity {
   private TransactionCategory category;
 
   @Column(nullable = false)
-  private LocalDate date; //the date the transaction was made
+  private LocalDate date; // the date the transaction was made
 
   @Column(nullable = false)
-  private Long amount; //We save amount in kobo value so 1 naira will be saved as 100. 1.50 naira will be saved as 150
+  private Long
+      amount; // We save amount in kobo value so 1.50 naira will be saved as 150
 
-    // constructor to accept dto
-    public Transaction (CreateTransactionRequest request){
-        this.description = request.getDescription();
-        this.type = request.getType();
-        this.category = request.getCategory();
-        this.date = request.getDate();
-        this.amount = request.getAmount();
-    }
+  // constructor to accept dto
+  public Transaction(CreateTransactionRequest request) {
+    this.description = request.getDescription();
+    this.type = request.getType();
+    this.category = request.getCategory();
+    this.date = request.getDate();
+    this.amount = request.getAmount();
+  }
 }

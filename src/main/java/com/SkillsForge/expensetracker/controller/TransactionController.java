@@ -7,25 +7,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "api/v1/transaction")
-
+@RequestMapping(value = "/api/v1/transaction")
 public class TransactionController {
-    private final TransactionService transactionService;
+  private final TransactionService transactionService;
 
-    @PostMapping
-    public ResponseEntity<TransactionDto> createTransaction(@RequestBody CreateTransactionRequest request) {
-        TransactionDto response = transactionService.createTransaction(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+  @PostMapping
+  public ResponseEntity<TransactionDto> createTransaction(
+      @RequestBody @Validated CreateTransactionRequest request) {
+    TransactionDto response = transactionService.createTransaction(request);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TransactionDto> getTransactionById(@PathVariable Long id) {
-        TransactionDto response = transactionService.getTransactionById(id);
-        return ResponseEntity.ok(response);
-    }
+  @GetMapping("/{id}")
+  public ResponseEntity<TransactionDto> getTransactionById(@PathVariable Long id) {
+    TransactionDto response = transactionService.getTransactionById(id);
+    return ResponseEntity.ok(response);
+  }
 }

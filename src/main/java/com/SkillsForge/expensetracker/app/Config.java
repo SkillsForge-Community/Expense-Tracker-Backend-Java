@@ -1,4 +1,3 @@
 package com.SkillsForge.expensetracker.app;
 
-public class Config {
-}
+public class Config {}
