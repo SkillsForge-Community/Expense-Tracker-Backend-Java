@@ -1,13 +1,31 @@
 package com.SkillsForge.expensetracker.controller;
 
+import com.SkillsForge.expensetracker.dto.CreateTransactionRequest;
+import com.SkillsForge.expensetracker.dto.TransactionDto;
 import com.SkillsForge.expensetracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "api/v1/transaction")
+
 public class TransactionController {
-  private final TransactionService transactionService;
+    private final TransactionService transactionService;
+
+    @PostMapping
+    public ResponseEntity<TransactionDto> createTransaction(@RequestBody CreateTransactionRequest request) {
+        TransactionDto response = transactionService.createTransaction(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TransactionDto> getTransactionById(@PathVariable Long id) {
+        TransactionDto response = transactionService.getTransactionById(id);
+        return ResponseEntity.ok(response);
+    }
 }
