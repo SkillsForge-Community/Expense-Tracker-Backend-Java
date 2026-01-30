@@ -6,7 +6,7 @@ on:
     branches: [main]
 env:
   ASC_PACKAGE_PATH: ${{ github.workspace }}
-  JAVA_VERSION: 17
+  JAVA_VERSION: 21
 
 jobs:
   deploy_to_production:
