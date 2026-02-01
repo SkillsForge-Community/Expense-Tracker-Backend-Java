@@ -1,14 +1,11 @@
 package com.SkillsForge.expensetracker.controller;
 
+import com.SkillsForge.expensetracker.app.dto.TransactionDto;
 import com.SkillsForge.expensetracker.app.dto.TransactionUpdateRequest;
-import com.SkillsForge.expensetracker.app.enums.TransactionCategory;
-import com.SkillsForge.expensetracker.app.enums.TransactionType;
 import com.SkillsForge.expensetracker.app.filter.TransactionFilter;
-import com.SkillsForge.expensetracker.persistence.entity.Transaction;
 import com.SkillsForge.expensetracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +17,7 @@ public class TransactionController {
   private final TransactionService transactionService;
 
   @PutMapping("/{id}")
-  public Transaction updateTransaction(
+  public TransactionDto updateTransaction(
           @PathVariable Long id,
           @RequestBody TransactionUpdateRequest request
   ) {
@@ -28,7 +25,7 @@ public class TransactionController {
   }
 
   @GetMapping
-  public Page<Transaction> getAllTransactions(
+  public Page<TransactionDto> getAllTransactions(
           @ModelAttribute TransactionFilter filter,
           Pageable pageable
   ) {
