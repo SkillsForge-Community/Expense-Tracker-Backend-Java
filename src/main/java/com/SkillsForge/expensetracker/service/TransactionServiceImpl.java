@@ -1,17 +1,10 @@
 package com.SkillsForge.expensetracker.service;
 
-import com.SkillsForge.expensetracker.app.dto.TransactionDto;
-import com.SkillsForge.expensetracker.app.dto.TransactionUpdateRequest;
-import com.SkillsForge.expensetracker.app.filter.TransactionFilter;
-import com.SkillsForge.expensetracker.persistence.entity.Transaction;
-import com.SkillsForge.expensetracker.persistence.repository.TransactionRepository;
-import jakarta.persistence.criteria.Predicate;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,6 +13,38 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+public class TransactionServiceImpl implements TransactionService {
+
+  private final TransactionRepository transactionRepository;
+
+  @Override
+  @Transactional
+  public TransactionDto createTransaction(CreateTransactionRequest request) {
+    LocalDateTime now = LocalDateTime.now();
+
+    Transaction transaction = new Transaction(request);
+    transaction.setCreatedAt(now);
+    transaction.setUpdatedAt(now);
+
+    Transaction savedTransaction = transactionRepository.save(transaction);
+    log.info("Transaction created successfully with ID: {}", savedTransaction.getId());
+    return TransactionDto.fromEntity(savedTransaction);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public TransactionDto getTransactionById(Long id) {
+    log.info("Fetching transaction with ID: {}", id);
+
+    return TransactionDto.fromEntity(
+        transactionRepository
+            .findById(id)
+            .orElseThrow(
+                () -> {
+                  log.error("Transaction not found with ID: {}", id);
+                  return new ResourceNotFoundException("Transaction not found with ID: " + id);
+                }));
+  }
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;

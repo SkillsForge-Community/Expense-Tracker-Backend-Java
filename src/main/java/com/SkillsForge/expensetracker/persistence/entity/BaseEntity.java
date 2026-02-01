@@ -1,12 +1,10 @@
 package com.SkillsForge.expensetracker.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
-
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @MappedSuperclass
 @Getter
@@ -22,6 +20,7 @@ public class BaseEntity {
 
   @Column(nullable = false)
   LocalDateTime createdAt;
+
   @Column(nullable = false)
   LocalDateTime updatedAt;
 
