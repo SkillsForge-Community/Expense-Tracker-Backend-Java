@@ -1,4 +1,4 @@
-package com.SkillsForge.expensetracker.app.dto;
+package com.SkillsForge.expensetracker.dto;
 
 import com.SkillsForge.expensetracker.app.enums.TransactionCategory;
 import com.SkillsForge.expensetracker.app.enums.TransactionType;

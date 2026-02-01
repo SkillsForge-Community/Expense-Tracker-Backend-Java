@@ -1,8 +1,18 @@
 package com.SkillsForge.expensetracker.service;
 
-
+import com.SkillsForge.expensetracker.app.filter.TransactionFilter;
+import com.SkillsForge.expensetracker.dto.CreateTransactionRequest;
+import com.SkillsForge.expensetracker.dto.TransactionDto;
+import com.SkillsForge.expensetracker.dto.TransactionUpdateRequest;
+import com.SkillsForge.expensetracker.exception.ResourceNotFoundException;
+import com.SkillsForge.expensetracker.persistence.entity.Transaction;
+import com.SkillsForge.expensetracker.persistence.repository.TransactionRepository;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,45 +25,45 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
 
-  private final TransactionRepository transactionRepository;
-
-  @Override
-  @Transactional
-  public TransactionDto createTransaction(CreateTransactionRequest request) {
-    LocalDateTime now = LocalDateTime.now();
-
-    Transaction transaction = new Transaction(request);
-    transaction.setCreatedAt(now);
-    transaction.setUpdatedAt(now);
-
-    Transaction savedTransaction = transactionRepository.save(transaction);
-    log.info("Transaction created successfully with ID: {}", savedTransaction.getId());
-    return TransactionDto.fromEntity(savedTransaction);
-  }
-
-  @Override
-  @Transactional(readOnly = true)
-  public TransactionDto getTransactionById(Long id) {
-    log.info("Fetching transaction with ID: {}", id);
-
-    return TransactionDto.fromEntity(
-        transactionRepository
-            .findById(id)
-            .orElseThrow(
-                () -> {
-                  log.error("Transaction not found with ID: {}", id);
-                  return new ResourceNotFoundException("Transaction not found with ID: " + id);
-                }));
-  }
-public class TransactionServiceImpl implements TransactionService {
-
     private final TransactionRepository transactionRepository;
 
+    // ================= CREATE =================
     @Override
+    @Transactional
+    public TransactionDto createTransaction(CreateTransactionRequest request) {
+        LocalDateTime now = LocalDateTime.now();
+
+        Transaction transaction = new Transaction(request);
+        transaction.setCreatedAt(now);
+        transaction.setUpdatedAt(now);
+
+        Transaction saved = transactionRepository.save(transaction);
+        log.info("Transaction created successfully with ID: {}", saved.getId());
+
+        return TransactionDto.fromEntity(saved);
+    }
+
+    // ================= GET BY ID =================
+    @Override
+    @Transactional(readOnly = true)
+    public TransactionDto getTransactionById(Long id) {
+        log.info("Fetching transaction with ID: {}", id);
+
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Transaction not found with ID: " + id));
+
+        return TransactionDto.fromEntity(transaction);
+    }
+
+    // ================= UPDATE =================
+    @Override
+    @Transactional
     public TransactionDto updateTransaction(Long id, TransactionUpdateRequest request) {
 
         Transaction existing = transactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Transaction not found with ID: " + id));
 
         existing.setDescription(request.getDescription());
         existing.setCategory(request.getCategory());
@@ -63,15 +73,15 @@ public class TransactionServiceImpl implements TransactionService {
         existing.setUpdatedAt(LocalDateTime.now());
 
         Transaction saved = transactionRepository.save(existing);
+        log.info("Transaction updated successfully with ID: {}", saved.getId());
 
-        return mapToDto(saved);
+        return TransactionDto.fromEntity(saved);
     }
 
+    // ================= GET ALL (FILTERED) =================
     @Override
-    public Page<TransactionDto> getAllTransactions(
-            TransactionFilter filter,
-            Pageable pageable
-    ) {
+    @Transactional(readOnly = true)
+    public Page<TransactionDto> getAllTransactions(TransactionFilter filter, Pageable pageable) {
 
         Specification<Transaction> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -87,19 +97,8 @@ public class TransactionServiceImpl implements TransactionService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return transactionRepository.findAll(spec, pageable)
-                .map(this::mapToDto);
-    }
-
-    private TransactionDto mapToDto(Transaction transaction) {
-        return TransactionDto.builder()
-                .id(transaction.getId())
-                .description(transaction.getDescription())
-                .category(transaction.getCategory())
-                .type(transaction.getType())
-                .amount(transaction.getAmount())
-                .date(transaction.getDate())
-                .createdAt(transaction.getCreatedAt())
-                .build();
+        return transactionRepository
+                .findAll(spec, pageable)
+                .map(TransactionDto::fromEntity);
     }
 }

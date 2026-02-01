@@ -2,9 +2,8 @@ package com.SkillsForge.expensetracker.controller;
 
 import com.SkillsForge.expensetracker.dto.CreateTransactionRequest;
 import com.SkillsForge.expensetracker.dto.TransactionDto;
-import com.SkillsForge.expensetracker.app.dto.TransactionDto;
-import com.SkillsForge.expensetracker.app.dto.TransactionUpdateRequest;
 import com.SkillsForge.expensetracker.app.filter.TransactionFilter;
+import com.SkillsForge.expensetracker.dto.TransactionUpdateRequest;
 import com.SkillsForge.expensetracker.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
