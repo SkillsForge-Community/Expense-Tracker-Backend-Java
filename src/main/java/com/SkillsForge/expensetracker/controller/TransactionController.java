@@ -22,16 +22,15 @@ public class TransactionController {
   private final TransactionService transactionService;
 
   @PostMapping
-  public ResponseEntity<TransactionDto> createTransaction(
+  @ResponseStatus(HttpStatus.CREATED)
+  public TransactionDto createTransaction(
       @RequestBody @Validated CreateTransactionRequest request) {
-    TransactionDto response = transactionService.createTransaction(request);
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    return transactionService.createTransaction(request);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<TransactionDto> getTransactionById(@PathVariable Long id) {
-    TransactionDto response = transactionService.getTransactionById(id);
-    return ResponseEntity.ok(response);
+  public TransactionDto getTransactionById(@PathVariable Long id) {
+    return transactionService.getTransactionById(id);
   }
 
   @PutMapping("/{id}")
