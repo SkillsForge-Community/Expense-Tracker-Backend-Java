@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TransactionFilter {
-    private TransactionCategory category;
-    private TransactionType type;
+  private TransactionCategory category;
+  private TransactionType type;
 }
