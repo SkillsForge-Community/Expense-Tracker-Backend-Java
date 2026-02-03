@@ -36,8 +36,7 @@ public class Transaction extends BaseEntity {
   private LocalDate date; // the date the transaction was made
 
   @Column(nullable = false)
-  private Long
-      amount; // We save amount in kobo value so 1.50 naira will be saved as 150
+  private Long amount; // We save amount in kobo value so 1.50 naira will be saved as 150
 
   // constructor to accept dto
   public Transaction(CreateTransactionRequest request) {
