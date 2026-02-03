@@ -68,14 +68,6 @@
             <version>5.0.1</version>
             <scope>compile</scope>
         </dependency>
-
-        <!-- Source: https://mvnrepository.com/artifact/com.diffplug.spotless/spotless-maven-plugin -->
-        <dependency>
-            <groupId>com.diffplug.spotless</groupId>
-            <artifactId>spotless-maven-plugin</artifactId>
-            <version>3.2.1</version>
-            <scope>compile</scope>
-        </dependency>
 	</dependencies>
 
 	<build>
