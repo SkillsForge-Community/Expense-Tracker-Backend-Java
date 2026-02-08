@@ -6,7 +6,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
-@Accessors(chain=true)
+@Accessors(chain = true)
 @Entity
 @Table(name = "users")
 @Getter
@@ -15,35 +15,35 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseEntity{
+public class User extends BaseEntity {
 
-    @Column(unique = true, nullable = false)
-    private String username;
+  @Column(unique = true, nullable = false)
+  private String username;
 
-    @Column(unique = true, nullable = false)
-    private String email;
+  @Column(unique = true, nullable = false)
+  private String email;
 
-    @Column(nullable = false)
-    private String password;
+  @Column(nullable = false)
+  private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    @Builder.Default
-    private Role role = Role.USER;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  @Builder.Default
+  private Role role = Role.USER;
 
-    @Column(nullable = false)
-    @Builder.Default
-    private boolean enabled =  true;
+  @Column(nullable = false)
+  @Builder.Default
+  private boolean enabled = true;
 
-    @Column(nullable = false)
-    @Builder.Default
-    private boolean accountNonExpired = true;
+  @Column(nullable = false)
+  @Builder.Default
+  private boolean accountNonExpired = true;
 
-    @Column(nullable = false)
-    @Builder.Default
-    private boolean accountNonLocked = true;
+  @Column(nullable = false)
+  @Builder.Default
+  private boolean accountNonLocked = true;
 
-    @Column(nullable = false)
-    @Builder.Default
-    private boolean credentialsNonExpired =  true;
+  @Column(nullable = false)
+  @Builder.Default
+  private boolean credentialsNonExpired = true;
 }

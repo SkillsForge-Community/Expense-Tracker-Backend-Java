@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthResponse {
-    // no need for validation, this is output
-    private String token;          // the JWT token string
-    private String type;           // token type, always "Bearer"
-    private Long id;
-    private String username;
-    private String email;
-    private Role role;            // USER or ADMIN
+  // no need for validation, this is output
+  private String token; // the JWT token string
+  private String type; // token type, always "Bearer"
+  private Long id;
+  private String username;
+  private String email;
+  private Role role; // USER or ADMIN
 }
