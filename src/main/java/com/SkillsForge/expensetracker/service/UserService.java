@@ -7,11 +7,9 @@ import com.SkillsForge.expensetracker.dto.UserDto;
 
 public interface UserService {
 
+  AuthResponse signup(SignupRequest request);
 
-    AuthResponse signup(SignupRequest request);
+  AuthResponse login(LoginRequest request);
 
-
-    AuthResponse login(LoginRequest request);
-
-    UserDto getCurrentUser();
+  UserDto getCurrentUser();
 }

@@ -13,24 +13,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-/**
- * Implementation of Spring Security's UserDetailsService. Loads user details from database for
- * authentication.
- */
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
   private final UserRepository userRepository;
 
-  /**
-   * Load user by username for Spring Security authentication. This method is called by Spring
-   * Security during authentication.
-   *
-   * @param username the username to search for
-   * @return UserDetails object containing user information
-   * @throws UsernameNotFoundException if user not found
-   */
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     // Find user in database
@@ -44,12 +32,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return buildUserDetails(user);
   }
 
-  /**
-   * Build Spring Security UserDetails from our User entity
-   *
-   * @param user our User entity
-   * @return Spring Security UserDetails
-   */
   private UserDetails buildUserDetails(User user) {
     return org.springframework.security.core.userdetails.User.builder()
         .username(user.getUsername())
@@ -62,13 +44,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         .build();
   }
 
-  /**
-   * Get authorities (permissions) for the user based on their role Spring Security uses
-   * GrantedAuthority for permissions
-   *
-   * @param user the user entity
-   * @return collection of granted authorities
-   */
   private Collection<? extends GrantedAuthority> getAuthorities(User user) {
     Set<GrantedAuthority> authorities = new HashSet<>();
 

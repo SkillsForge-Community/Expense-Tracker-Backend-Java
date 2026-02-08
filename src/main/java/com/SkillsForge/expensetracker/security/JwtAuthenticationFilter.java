@@ -14,10 +14,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-/**
- * JWT Authentication Filter that intercepts every HTTP request. Validates JWT token and sets
- * authentication in Spring Security context.
- */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -25,16 +21,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private final JwtUtil jwtUtil;
   private final UserDetailsServiceImpl userDetailsService;
 
-  /**
-   * Filter method that runs once per request. Extracts and validates JWT token, then sets
-   * authentication.
-   *
-   * @param request HTTP request
-   * @param response HTTP response
-   * @param filterChain filter chain to continue processing
-   * @throws ServletException if servlet error occurs
-   * @throws IOException if I/O error occurs
-   */
   @Override
   protected void doFilterInternal(
       @NonNull HttpServletRequest request,
@@ -42,13 +28,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       @NonNull FilterChain filterChain)
       throws ServletException, IOException {
 
-    // 1. Extract the Authorization header from the request
+    // Extract the Authorization header from the request
     final String authorizationHeader = request.getHeader("Authorization");
 
     String username = null;
     String jwt = null;
 
-    // 2. Check if header exists and starts with "Bearer "
+    // Check if header exists and starts with "Bearer "
     if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
       jwt = authorizationHeader.substring(7); // Remove "Bearer " prefix to get token
       try {
@@ -59,14 +45,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       }
     }
 
-    // 3. If we have a username and no authentication exists in SecurityContext
+    // If we have a username and no authentication exists in SecurityContext
     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
       // Load user details from database
       UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
       // Validate the token
-      if (jwtUtil.validateToken(jwt, userDetails)) {
+      if (jwtUtil.isTokenValid(jwt, userDetails)) {
         // Token is valid - create authentication object
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(
@@ -81,7 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       }
     }
 
-    // 4. Continue the filter chain (pass request to next filter or controller)
+    // Continue the filter chain (pass request to next filter or controller)
     filterChain.doFilter(request, response);
   }
 }

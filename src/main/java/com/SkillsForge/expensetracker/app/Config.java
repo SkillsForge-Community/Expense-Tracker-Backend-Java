@@ -47,7 +47,7 @@ public class Config {
             auth ->
                 auth
                     // Public endpoints - anyone can access
-                    .requestMatchers("/api/auth/**")
+                    .requestMatchers("/api/v1/auth/**")
                     .permitAll()
 
                     // All other endpoints require authentication
