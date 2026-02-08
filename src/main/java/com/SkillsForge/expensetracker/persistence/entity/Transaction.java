@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
+import org.apache.logging.log4j.util.Lazy;
 
 @Accessors(chain = true)
 @Entity
@@ -37,6 +38,11 @@ public class Transaction extends BaseEntity {
 
   @Column(nullable = false)
   private Long amount; // We save amount in kobo value so 1.50 naira will be saved as 150
+
+    // user relationship
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",  nullable = false)
+    private User user;
 
   // constructor to accept dto
   public Transaction(CreateTransactionRequest request) {
