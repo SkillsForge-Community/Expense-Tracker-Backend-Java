@@ -4,10 +4,12 @@ import com.SkillsForge.expensetracker.app.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class AuthResponse {
     // no need for validation, this is output
     private String token;          // the JWT token string
