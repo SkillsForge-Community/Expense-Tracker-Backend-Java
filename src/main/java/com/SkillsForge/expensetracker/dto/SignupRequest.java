@@ -22,6 +22,6 @@ public class SignupRequest {
     private String username;
 
     @NotBlank(message = "Password is required")
-    @Size(min = 6,  max = 20, message = "Message must be between 6 and 20 characters")
+    @Size(min = 6,  max = 50, message = "Password must be between 6 and 50 characters")
     private String password;
 }
