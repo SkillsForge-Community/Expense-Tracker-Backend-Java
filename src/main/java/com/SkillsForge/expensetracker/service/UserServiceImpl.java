@@ -23,9 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Implementation of UserService for authentication and user management
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -36,14 +33,6 @@ public class UserServiceImpl implements UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
-    /**
-     * Register a new user with default USER role
-     *
-     * @param request signup request with username, email, password
-     * @return authentication response with JWT token
-     * @throws UsernameAlreadyExistsException if username already taken
-     * @throws EmailAlreadyExistsException    if email already registered
-     */
     @Override
     @Transactional
     public AuthResponse signup(SignupRequest request) {
@@ -92,13 +81,6 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    /**
-     * Authenticate user with credentials and generate JWT token
-     *
-     * @param request login request with username and password
-     * @return authentication response with JWT token
-     * @throws InvalidCredentialsException if credentials are invalid
-     */
     @Override
     public AuthResponse login(LoginRequest request) {
         log.info("Login attempt for user: {}", request.getUsername());
@@ -134,12 +116,7 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    /**
-     * Get currently authenticated user details
-     *
-     * @return user DTO without password
-     * @throws UsernameNotFoundException if user not found
-     */
+
     @Override
     public UserDto getCurrentUser() {
         // Get authentication from SecurityContext (set by JWT filter)
