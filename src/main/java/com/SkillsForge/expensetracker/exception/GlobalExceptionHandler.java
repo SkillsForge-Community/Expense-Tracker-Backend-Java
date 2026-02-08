@@ -19,19 +19,21 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleValidationException(
       MethodArgumentNotValidException ex, HttpServletRequest request) {
 
-    String errorMessage = ex.getBindingResult().getFieldErrors().stream()
-        .map(error -> error.getField() + ": " + error.getDefaultMessage())
-        .collect(Collectors.joining(", "));
+    String errorMessage =
+        ex.getBindingResult().getFieldErrors().stream()
+            .map(error -> error.getField() + ": " + error.getDefaultMessage())
+            .collect(Collectors.joining(", "));
 
     log.error("Validation error: {}", errorMessage);
 
-    ErrorResponse errorResponse = ErrorResponse.builder()
-        .timestamp(LocalDateTime.now())
-        .status(HttpStatus.BAD_REQUEST.value())
-        .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-        .message(errorMessage)
-        .path(request.getRequestURI())
-        .build();
+    ErrorResponse errorResponse =
+        ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.BAD_REQUEST.value())
+            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+            .message(errorMessage)
+            .path(request.getRequestURI())
+            .build();
 
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
   }
@@ -42,13 +44,14 @@ public class GlobalExceptionHandler {
 
     log.error("Unexpected error occurred: ", ex);
 
-    ErrorResponse errorResponse = ErrorResponse.builder()
-        .timestamp(LocalDateTime.now())
-        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-        .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-        .message("An unexpected error occurred")
-        .path(request.getRequestURI())
-        .build();
+    ErrorResponse errorResponse =
+        ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+            .message("An unexpected error occurred")
+            .path(request.getRequestURI())
+            .build();
 
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
   }
@@ -59,13 +62,14 @@ public class GlobalExceptionHandler {
 
     log.error("Resource not found: {}", ex.getMessage());
 
-    ErrorResponse errorResponse = ErrorResponse.builder()
-        .timestamp(LocalDateTime.now())
-        .status(HttpStatus.NOT_FOUND.value())
-        .error(HttpStatus.NOT_FOUND.getReasonPhrase())
-        .message(ex.getMessage())
-        .path(request.getRequestURI())
-        .build();
+    ErrorResponse errorResponse =
+        ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.NOT_FOUND.value())
+            .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
 
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
   }
@@ -76,13 +80,14 @@ public class GlobalExceptionHandler {
 
     log.error("Username already exists: {}", ex.getMessage());
 
-    ErrorResponse errorResponse = ErrorResponse.builder()
-        .timestamp(LocalDateTime.now())
-        .status(HttpStatus.CONFLICT.value())
-        .error(HttpStatus.CONFLICT.getReasonPhrase())
-        .message(ex.getMessage())
-        .path(request.getRequestURI())
-        .build();
+    ErrorResponse errorResponse =
+        ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.CONFLICT.value())
+            .error(HttpStatus.CONFLICT.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
 
     return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
   }
@@ -93,13 +98,14 @@ public class GlobalExceptionHandler {
 
     log.error("Email already exists: {}", ex.getMessage());
 
-    ErrorResponse errorResponse = ErrorResponse.builder()
-        .timestamp(LocalDateTime.now())
-        .status(HttpStatus.CONFLICT.value())
-        .error(HttpStatus.CONFLICT.getReasonPhrase())
-        .message(ex.getMessage())
-        .path(request.getRequestURI())
-        .build();
+    ErrorResponse errorResponse =
+        ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.CONFLICT.value())
+            .error(HttpStatus.CONFLICT.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
 
     return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
   }
@@ -110,13 +116,14 @@ public class GlobalExceptionHandler {
 
     log.error("Invalid credentials: {}", ex.getMessage());
 
-    ErrorResponse errorResponse = ErrorResponse.builder()
-        .timestamp(LocalDateTime.now())
-        .status(HttpStatus.UNAUTHORIZED.value())
-        .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
-        .message(ex.getMessage())
-        .path(request.getRequestURI())
-        .build();
+    ErrorResponse errorResponse =
+        ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.UNAUTHORIZED.value())
+            .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
 
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
   }
@@ -127,13 +134,14 @@ public class GlobalExceptionHandler {
 
     log.error("Access denied: {}", ex.getMessage());
 
-    ErrorResponse errorResponse = ErrorResponse.builder()
-        .timestamp(LocalDateTime.now())
-        .status(HttpStatus.FORBIDDEN.value())
-        .error(HttpStatus.FORBIDDEN.getReasonPhrase())
-        .message("You don't have permission to access this resource")
-        .path(request.getRequestURI())
-        .build();
+    ErrorResponse errorResponse =
+        ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.FORBIDDEN.value())
+            .error(HttpStatus.FORBIDDEN.getReasonPhrase())
+            .message("You don't have permission to access this resource")
+            .path(request.getRequestURI())
+            .build();
 
     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
   }
