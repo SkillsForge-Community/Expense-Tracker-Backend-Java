@@ -1,0 +1,81 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <!-- Add user_id column to transactions table -->
+    <changeSet id="2026020801-3" author="expense-tracker-auth">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="transactions" columnName="user_id"/>
+            </not>
+        </preConditions>
+
+        <!-- Add the column as nullable first to allow existing data -->
+        <addColumn tableName="transactions">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- Create a default admin user for existing transactions -->
+    <changeSet id="2026020801-4" author="expense-tracker-auth">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM users WHERE username = 'system_admin'
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="users">
+            <column name="username" value="system_admin"/>
+            <column name="email" value="admin@expensetracker.local"/>
+            <!-- BCrypt hash for password: "ChangeMe123!" - MUST be changed after first login -->
+            <column name="password" value="$2a$10$qXEGZ5QGz0QBCj5LvPQnHuEqZ5t8xGVR6Pz0pN7W0HfKqYQGz0QBCj"/>
+            <column name="role" value="ADMIN"/>
+            <column name="enabled" valueBoolean="true"/>
+            <column name="account_non_expired" valueBoolean="true"/>
+            <column name="account_non_locked" valueBoolean="true"/>
+            <column name="credentials_non_expired" valueBoolean="true"/>
+            <column name="created_at" valueDate="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueDate="CURRENT_TIMESTAMP"/>
+        </insert>
+    </changeSet>
+
+    <!-- Assign existing transactions to the system admin user -->
+    <changeSet id="2026020801-5" author="expense-tracker-auth">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="1">
+                SELECT COUNT(*) FROM users WHERE username = 'system_admin'
+            </sqlCheck>
+        </preConditions>
+
+        <sql>
+            UPDATE transactions
+            SET user_id = (SELECT id FROM users WHERE username = 'system_admin')
+            WHERE user_id IS NULL
+        </sql>
+    </changeSet>
+
+    <!-- Make user_id NOT NULL and add foreign key constraint -->
+    <changeSet id="2026020801-6" author="expense-tracker-auth">
+        <addNotNullConstraint tableName="transactions" columnName="user_id" columnDataType="BIGINT"/>
+
+        <addForeignKeyConstraint
+                baseTableName="transactions"
+                baseColumnNames="user_id"
+                constraintName="fk_transactions_user"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+    </changeSet>
+
+    <!-- Create index on user_id for performance -->
+    <changeSet id="2026020801-7" author="expense-tracker-auth">
+        <createIndex tableName="transactions" indexName="transactions_user_id_idx">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
