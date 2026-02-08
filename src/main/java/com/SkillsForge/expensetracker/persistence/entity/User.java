@@ -13,7 +13,8 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @ToString
 @SuperBuilder
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class User extends BaseEntity{
 
     @Column(unique = true, nullable = false)
@@ -28,7 +29,7 @@ public class User extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Builder.Default
-    private Role role;
+    private Role role = Role.USER;
 
     @Column(nullable = false)
     @Builder.Default
