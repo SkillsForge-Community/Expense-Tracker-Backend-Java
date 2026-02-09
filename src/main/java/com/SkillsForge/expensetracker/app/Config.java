@@ -16,9 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/**
- * Spring Security Configuration Configures authentication, authorization, and JWT token validation
- */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity // Enables @PreAuthorize, @PostAuthorize annotations
@@ -27,14 +24,6 @@ public class Config {
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-  /**
-   * Configure the security filter chain Defines which endpoints are public and which require
-   * authentication
-   *
-   * @param http HttpSecurity to configure
-   * @return configured SecurityFilterChain
-   * @throws Exception if configuration fails
-   */
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
@@ -43,17 +32,16 @@ public class Config {
         .csrf(AbstractHttpConfigurer::disable)
 
         // Configure endpoint authorization
-        .authorizeHttpRequests(
-            auth ->
-                auth
-                    // Public endpoints - anyone can access
-                    .requestMatchers("/api/v1/auth/**")
-                    .permitAll()
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(
+                            "/api/v1/auth/signup",
+                            "/api/v1/auth/login",
+                            "/api/v1/auth/refresh-token" // if you have one
+                    ).permitAll()
 
-                    // All other endpoints require authentication
-                    .anyRequest()
-                    .authenticated())
-
+                    //  LOCKED DOORS (Everything else, including /auth/current-user)
+                    .anyRequest().authenticated()
+            )
         // Configure session management
         // STATELESS = no server-side sessions, use JWT only
         .sessionManagement(
@@ -66,24 +54,11 @@ public class Config {
     return http.build();
   }
 
-  /**
-   * Password encoder bean for hashing passwords BCrypt is a strong hashing algorithm recommended
-   * for passwords
-   *
-   * @return BCryptPasswordEncoder instance
-   */
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
 
-  /**
-   * Authentication manager bean Used for authenticating users during login
-   *
-   * @param config authentication configuration
-   * @return AuthenticationManager
-   * @throws Exception if configuration fails
-   */
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
       throws Exception {
