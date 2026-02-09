@@ -7,6 +7,8 @@ import com.SkillsForge.expensetracker.dto.TransactionUpdateRequest;
 import com.SkillsForge.expensetracker.exception.ResourceNotFoundException;
 import com.SkillsForge.expensetracker.persistence.entity.Transaction;
 import com.SkillsForge.expensetracker.persistence.repository.TransactionRepository;
+import com.SkillsForge.expensetracker.persistence.entity.User;
+import com.SkillsForge.expensetracker.persistence.repository.UserRepository;
 import jakarta.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,48 +28,46 @@ import org.springframework.transaction.annotation.Transactional;
 public class TransactionServiceImpl implements TransactionService {
 
   private final TransactionRepository transactionRepository;
+  private final UserRepository userRepository;
 
-  // ================= CREATE =================
   @Override
   @Transactional
   public TransactionDto createTransaction(CreateTransactionRequest request) {
-    LocalDateTime now = LocalDateTime.now();
+    User user = getCurrentUser();
 
     Transaction transaction = new Transaction(request);
-    transaction.setCreatedAt(now);
-    transaction.setUpdatedAt(now);
+    transaction.setUser(user);
+    transaction.setCreatedAt(LocalDateTime.now());
+    transaction.setUpdatedAt(LocalDateTime.now());
 
     Transaction saved = transactionRepository.save(transaction);
-    log.info("Transaction created successfully with ID: {}", saved.getId());
+    log.info("Transaction created with ID: {}", saved.getId());
 
     return TransactionDto.fromEntity(saved);
   }
 
-  // ================= GET BY ID =================
   @Override
   @Transactional(readOnly = true)
   public TransactionDto getTransactionById(Long id) {
-    log.info("Fetching transaction with ID: {}", id);
+    User user = getCurrentUser();
 
-    Transaction transaction =
-        transactionRepository
-            .findById(id)
-            .orElseThrow(
-                () -> new ResourceNotFoundException("Transaction not found with ID: " + id));
+    Transaction transaction = transactionRepository
+        .findByIdAndUser(id, user)
+        .orElseThrow(
+            () -> new ResourceNotFoundException("Transaction not found with ID: " + id));
 
     return TransactionDto.fromEntity(transaction);
   }
 
-  // ================= UPDATE =================
   @Override
   @Transactional
   public TransactionDto updateTransaction(Long id, TransactionUpdateRequest request) {
+    User user = getCurrentUser();
 
-    Transaction existing =
-        transactionRepository
-            .findById(id)
-            .orElseThrow(
-                () -> new ResourceNotFoundException("Transaction not found with ID: " + id));
+    Transaction existing = transactionRepository
+        .findByIdAndUser(id, user)
+        .orElseThrow(
+            () -> new ResourceNotFoundException("Transaction not found with ID: " + id));
 
     existing.setDescription(request.getDescription());
     existing.setCategory(request.getCategory());
@@ -76,31 +77,40 @@ public class TransactionServiceImpl implements TransactionService {
     existing.setUpdatedAt(LocalDateTime.now());
 
     Transaction saved = transactionRepository.save(existing);
-    log.info("Transaction updated successfully with ID: {}", saved.getId());
+    log.info("Transaction updated with ID: {}", saved.getId());
 
     return TransactionDto.fromEntity(saved);
   }
 
-  // ================= GET ALL (FILTERED) =================
   @Override
   @Transactional(readOnly = true)
   public Page<TransactionDto> getAllTransactions(TransactionFilter filter, Pageable pageable) {
+    User user = getCurrentUser();
 
-    Specification<Transaction> spec =
-        (root, query, cb) -> {
-          List<Predicate> predicates = new ArrayList<>();
+    Specification<Transaction> spec = (root, query, cb) -> {
+      List<Predicate> predicates = new ArrayList<>();
 
-          if (filter.getCategory() != null) {
-            predicates.add(cb.equal(root.get("category"), filter.getCategory()));
-          }
+      // Force filter by current user
+      predicates.add(cb.equal(root.get("user"), user));
 
-          if (filter.getType() != null) {
-            predicates.add(cb.equal(root.get("type"), filter.getType()));
-          }
+      if (filter.getCategory() != null) {
+        predicates.add(cb.equal(root.get("category"), filter.getCategory()));
+      }
 
-          return cb.and(predicates.toArray(new Predicate[0]));
-        };
+      if (filter.getType() != null) {
+        predicates.add(cb.equal(root.get("type"), filter.getType()));
+      }
+
+      return cb.and(predicates.toArray(new Predicate[0]));
+    };
 
     return transactionRepository.findAll(spec, pageable).map(TransactionDto::fromEntity);
+  }
+
+  private User getCurrentUser() {
+    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    return userRepository
+        .findByUsername(username)
+        .orElseThrow(() -> new ResourceNotFoundException("User not found"));
   }
 }
