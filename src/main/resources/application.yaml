@@ -24,7 +24,7 @@ spring:
 #    drop-first: false
 
 jwt:
-  secret: ${jwt.secrets}
+  secret: ${jwt.secret}
   expiration: ${JWT_EXPIRATION:86400000}
 
 server:
