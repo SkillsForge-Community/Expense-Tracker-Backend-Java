@@ -10,6 +10,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -19,7 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtUtil jwtUtil;
-  private final UserDetailsServiceImpl userDetailsService;
+  private final UserDetailsService userDetailsService;
 
   @Override
   protected void doFilterInternal(
@@ -35,15 +36,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     String jwt = null;
 
     // Check if header exists and starts with "Bearer "
-    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-      jwt = authorizationHeader.substring(7); // Remove "Bearer " prefix to get token
-      try {
-        username = jwtUtil.extractUsername(jwt); // Extract username from token
-      } catch (Exception e) {
-        // Token is invalid or expired - log and continue without authentication
-        logger.warn("JWT token extraction failed: " + e.getMessage());
+      if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+          jwt = authorizationHeader.substring(7);
+          try {
+              username = jwtUtil.extractUsername(jwt);
+          } catch (Exception e) {
+              // Print the full error to see if it's a Key or Format issue
+              logger.error("CRITICAL JWT FAILURE: " + e.getMessage());
+              e.printStackTrace();
+          }
       }
-    }
 
     // If we have a username and no authentication exists in SecurityContext
     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
