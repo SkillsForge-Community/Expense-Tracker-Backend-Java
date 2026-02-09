@@ -31,8 +31,8 @@
         <insert tableName="users">
             <column name="username" value="system_admin"/>
             <column name="email" value="admin@expensetracker.local"/>
-            <!-- BCrypt hash for password: "ChangeMe123!" - MUST be changed after first login -->
-            <column name="password" value="$2a$10$qXEGZ5QGz0QBCj5LvPQnHuEqZ5t8xGVR6Pz0pN7W0HfKqYQGz0QBCj"/>
+            <!-- password is "password"-->
+            <column name="password" value="$2a$10$wPHxwfsfTnOJAdgYcerBt.utdAvC24B/DWfuXfzKBSDHO0etB1ica"/>
             <column name="role" value="ADMIN"/>
             <column name="enabled" valueBoolean="true"/>
             <column name="account_non_expired" valueBoolean="true"/>
