@@ -6,11 +6,6 @@ public enum Role {
   USER,
   ADMIN;
 
-  /**
-   * Get the permissions associated with this role
-   *
-   * @return set of permissions for this role
-   */
   public Set<Permissions> getPermissions() {
     return switch (this) {
       case ADMIN -> Set.of(Permissions.values()); // Admin has all permissions
