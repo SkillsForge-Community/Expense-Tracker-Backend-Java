@@ -1,6 +1,4 @@
 spring:
-  config:
-    import: "optional:configtree:secrets/"
   application:
     name: Expense-Tracker-Backend-Java
 
