@@ -55,4 +55,94 @@ public class GlobalExceptionHandler {
 
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
   }
+
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleResourceNotFound(
+      ResourceNotFoundException ex, HttpServletRequest request) {
+
+    log.error("Resource not found: {}", ex.getMessage());
+
+    ErrorResponse errorResponse =
+        ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.NOT_FOUND.value())
+            .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+  }
+
+  @ExceptionHandler(UsernameAlreadyExistsException.class)
+  public ResponseEntity<ErrorResponse> handleUsernameAlreadyExists(
+      UsernameAlreadyExistsException ex, HttpServletRequest request) {
+
+    log.error("Username already exists: {}", ex.getMessage());
+
+    ErrorResponse errorResponse =
+        ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.CONFLICT.value())
+            .error(HttpStatus.CONFLICT.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+  }
+
+  @ExceptionHandler(EmailAlreadyExistsException.class)
+  public ResponseEntity<ErrorResponse> handleEmailAlreadyExists(
+      EmailAlreadyExistsException ex, HttpServletRequest request) {
+
+    log.error("Email already exists: {}", ex.getMessage());
+
+    ErrorResponse errorResponse =
+        ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.CONFLICT.value())
+            .error(HttpStatus.CONFLICT.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+  }
+
+  @ExceptionHandler(InvalidCredentialsException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidCredentials(
+      InvalidCredentialsException ex, HttpServletRequest request) {
+
+    log.error("Invalid credentials: {}", ex.getMessage());
+
+    ErrorResponse errorResponse =
+        ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.UNAUTHORIZED.value())
+            .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+            .message(ex.getMessage())
+            .path(request.getRequestURI())
+            .build();
+
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+  }
+
+  @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+  public ResponseEntity<ErrorResponse> handleAccessDenied(
+      org.springframework.security.access.AccessDeniedException ex, HttpServletRequest request) {
+
+    log.error("Access denied: {}", ex.getMessage());
+
+    ErrorResponse errorResponse =
+        ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.FORBIDDEN.value())
+            .error(HttpStatus.FORBIDDEN.getReasonPhrase())
+            .message("You don't have permission to access this resource")
+            .path(request.getRequestURI())
+            .build();
+
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+  }
 }

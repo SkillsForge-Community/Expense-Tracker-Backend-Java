@@ -1,0 +1,67 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2026020801-1" author="expense-tracker-auth">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" unique="true" primaryKeyName="pk_users"/>
+            </column>
+            
+            <!-- BaseEntity fields -->
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- User authentication fields -->
+            <column name="username" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            
+            <!-- Role and status fields -->
+            <column name="role" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_non_expired" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_non_locked" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="credentials_non_expired" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Create indexes for performance -->
+    <changeSet id="2026020801-2" author="expense-tracker-auth">
+        <createIndex tableName="users" indexName="users_username_idx">
+            <column name="username"/>
+        </createIndex>
+        <createIndex tableName="users" indexName="users_email_idx">
+            <column name="email"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
