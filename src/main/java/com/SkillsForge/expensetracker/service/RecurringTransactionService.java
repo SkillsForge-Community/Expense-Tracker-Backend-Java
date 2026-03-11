@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 
 import java.awt.print.Pageable;
 
-public interface RecurringExpense {
+public interface RecurringTransactionService {
     TransactionDto createRecurringTransaction(CreateTransactionRequest request);
     TransactionDto getRecurringTransactionById(Long id);
     TransactionDto updateRecurringTransaction(Long id, CreateTransactionRequest request);
