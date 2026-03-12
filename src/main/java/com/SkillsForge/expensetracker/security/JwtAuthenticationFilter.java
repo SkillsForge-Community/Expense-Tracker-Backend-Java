@@ -36,16 +36,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     String jwt = null;
 
     // Check if header exists and starts with "Bearer "
-      if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-          jwt = authorizationHeader.substring(7);
-          try {
-              username = jwtUtil.extractUsername(jwt);
-          } catch (Exception e) {
-              // Print the full error to see if it's a Key or Format issue
-              logger.error("CRITICAL JWT FAILURE: " + e.getMessage());
-              e.printStackTrace();
-          }
+    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+      jwt = authorizationHeader.substring(7);
+      try {
+        username = jwtUtil.extractUsername(jwt);
+      } catch (Exception e) {
+        // Print the full error to see if it's a Key or Format issue
+        logger.error("CRITICAL JWT FAILURE: " + e.getMessage());
+        e.printStackTrace();
       }
+    }
 
     // If we have a username and no authentication exists in SecurityContext
     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
