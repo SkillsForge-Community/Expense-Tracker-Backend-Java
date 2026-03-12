@@ -1,15 +1,14 @@
 package com.SkillsForge.expensetracker.persistence.entity;
 
 import com.SkillsForge.expensetracker.app.enums.TransactionCategory;
+import com.SkillsForge.expensetracker.app.enums.TransactionFrequency;
 import com.SkillsForge.expensetracker.app.enums.TransactionType;
 import jakarta.persistence.*;
-import jdk.jfr.Frequency;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "recurring_transactions")
@@ -19,31 +18,30 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class RecurringTransaction extends BaseEntity {
 
-    @Column(nullable = false)
-    private String description;
+  @Column(nullable = false)
+  private String description;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TransactionType type;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private TransactionType type;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private TransactionCategory category;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private TransactionCategory category;
 
-    @Column(nullable = false)
-    private Long amount; // Still in Kobo
+  @Column(nullable = false)
+  private Long amount; // Still in Kobo
 
-    @Column(nullable = false)
-    private LocalDate nextExecutionDate;
+  @Column(nullable = false)
+  private LocalDate nextExecutionDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Frequency frequency; // DAILY, WEEKLY, MONTHLY, etc.
+  @Enumerated(EnumType.STRING)
+  private TransactionFrequency frequency; // DAILY, WEEKLY, MONTHLY, etc.
 
-    @Column(nullable = false)
-    private boolean isActive = true;
+  @Column(nullable = false)
+  private boolean isActive = true;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 }
