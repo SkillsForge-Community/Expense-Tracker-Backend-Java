@@ -32,16 +32,18 @@ public class Config {
         .csrf(AbstractHttpConfigurer::disable)
 
         // Configure endpoint authorization
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(
-                            "/api/v1/auth/signup",
-                            "/api/v1/auth/login",
-                            "/api/v1/auth/refresh-token" // if you have one
-                    ).permitAll()
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers(
+                        "/api/v1/auth/signup",
+                        "/api/v1/auth/login",
+                        "/api/v1/auth/refresh-token" // if you have one
+                        )
+                    .permitAll()
 
                     //  LOCKED DOORS (Everything else, including /auth/current-user)
-                    .anyRequest().authenticated()
-            )
+                    .anyRequest()
+                    .authenticated())
         // Configure session management
         // STATELESS = no server-side sessions, use JWT only
         .sessionManagement(

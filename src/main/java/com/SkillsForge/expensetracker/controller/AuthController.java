@@ -35,7 +35,6 @@ public class AuthController {
     return ResponseEntity.ok(response);
   }
 
-
   @GetMapping("/me")
   @PreAuthorize("hasAuthority('USER_READ')")
   public ResponseEntity<UserDto> getCurrentUser() {
