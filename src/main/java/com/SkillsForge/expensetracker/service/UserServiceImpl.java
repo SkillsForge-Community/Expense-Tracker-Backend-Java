@@ -30,7 +30,13 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
-  private final AuthenticationManager authenticationManager;
+
+  @org.springframework.context.annotation.Lazy
+  @org.springframework.beans.factory.annotation.Autowired
+  private AuthenticationManager authenticationManager;
+
+  private final org.springframework.security.core.userdetails.UserDetailsService userDetailsService;
+
   private final JwtUtil jwtUtil;
 
   @Override
@@ -67,13 +73,9 @@ public class UserServiceImpl implements UserService {
     User savedUser = userRepository.save(user);
     log.info("Successfully registered new user with ID: {}", savedUser.getId());
 
-    // Create UserDetails for token generation
+    // Create UserDetails for token generation using the real mapping logic
     org.springframework.security.core.userdetails.UserDetails userDetails =
-        org.springframework.security.core.userdetails.User.builder()
-            .username(savedUser.getUsername())
-            .password(savedUser.getPassword())
-            .authorities("ROLE_" + savedUser.getRole().name())
-            .build();
+        userDetailsService.loadUserByUsername(savedUser.getUsername());
 
     // Generate JWT token for automatic login
     String token = jwtUtil.generateToken(userDetails);
@@ -111,13 +113,9 @@ public class UserServiceImpl implements UserService {
 
     log.info("User {} logged in successfully", user.getUsername());
 
-    // Create UserDetails for token generation
+    // Create UserDetails for token generation using the real mapping logic
     org.springframework.security.core.userdetails.UserDetails userDetails =
-        org.springframework.security.core.userdetails.User.builder()
-            .username(user.getUsername())
-            .password(user.getPassword())
-            .authorities("ROLE_" + user.getRole().name())
-            .build();
+        userDetailsService.loadUserByUsername(user.getUsername());
 
     // Generate JWT token
     String token = jwtUtil.generateToken(userDetails);
