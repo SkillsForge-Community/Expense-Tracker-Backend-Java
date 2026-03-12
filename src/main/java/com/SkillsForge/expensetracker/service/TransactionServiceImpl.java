@@ -6,8 +6,8 @@ import com.SkillsForge.expensetracker.dto.TransactionDto;
 import com.SkillsForge.expensetracker.dto.TransactionUpdateRequest;
 import com.SkillsForge.expensetracker.exception.ResourceNotFoundException;
 import com.SkillsForge.expensetracker.persistence.entity.Transaction;
-import com.SkillsForge.expensetracker.persistence.repository.TransactionRepository;
 import com.SkillsForge.expensetracker.persistence.entity.User;
+import com.SkillsForge.expensetracker.persistence.repository.TransactionRepository;
 import com.SkillsForge.expensetracker.persistence.repository.UserRepository;
 import jakarta.persistence.criteria.Predicate;
 import java.time.LocalDateTime;
@@ -51,10 +51,11 @@ public class TransactionServiceImpl implements TransactionService {
   public TransactionDto getTransactionById(Long id) {
     User user = getCurrentUser();
 
-    Transaction transaction = transactionRepository
-        .findByIdAndUser(id, user)
-        .orElseThrow(
-            () -> new ResourceNotFoundException("Transaction not found with ID: " + id));
+    Transaction transaction =
+        transactionRepository
+            .findByIdAndUser(id, user)
+            .orElseThrow(
+                () -> new ResourceNotFoundException("Transaction not found with ID: " + id));
 
     return TransactionDto.fromEntity(transaction);
   }
@@ -64,10 +65,11 @@ public class TransactionServiceImpl implements TransactionService {
   public TransactionDto updateTransaction(Long id, TransactionUpdateRequest request) {
     User user = getCurrentUser();
 
-    Transaction existing = transactionRepository
-        .findByIdAndUser(id, user)
-        .orElseThrow(
-            () -> new ResourceNotFoundException("Transaction not found with ID: " + id));
+    Transaction existing =
+        transactionRepository
+            .findByIdAndUser(id, user)
+            .orElseThrow(
+                () -> new ResourceNotFoundException("Transaction not found with ID: " + id));
 
     existing.setDescription(request.getDescription());
     existing.setCategory(request.getCategory());
@@ -87,22 +89,23 @@ public class TransactionServiceImpl implements TransactionService {
   public Page<TransactionDto> getAllTransactions(TransactionFilter filter, Pageable pageable) {
     User user = getCurrentUser();
 
-    Specification<Transaction> spec = (root, query, cb) -> {
-      List<Predicate> predicates = new ArrayList<>();
+    Specification<Transaction> spec =
+        (root, query, cb) -> {
+          List<Predicate> predicates = new ArrayList<>();
 
-      // Force filter by current user
-      predicates.add(cb.equal(root.get("user"), user));
+          // Force filter by current user
+          predicates.add(cb.equal(root.get("user"), user));
 
-      if (filter.getCategory() != null) {
-        predicates.add(cb.equal(root.get("category"), filter.getCategory()));
-      }
+          if (filter.getCategory() != null) {
+            predicates.add(cb.equal(root.get("category"), filter.getCategory()));
+          }
 
-      if (filter.getType() != null) {
-        predicates.add(cb.equal(root.get("type"), filter.getType()));
-      }
+          if (filter.getType() != null) {
+            predicates.add(cb.equal(root.get("type"), filter.getType()));
+          }
 
-      return cb.and(predicates.toArray(new Predicate[0]));
-    };
+          return cb.and(predicates.toArray(new Predicate[0]));
+        };
 
     return transactionRepository.findAll(spec, pageable).map(TransactionDto::fromEntity);
   }

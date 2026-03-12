@@ -1,17 +1,16 @@
 package com.SkillsForge.expensetracker.service;
 
-
-import com.SkillsForge.expensetracker.dto.CreateTransactionRequest;
-import com.SkillsForge.expensetracker.dto.TransactionDto;
-import org.springframework.data.domain.Page;
-
-
-import java.awt.print.Pageable;
+import com.SkillsForge.expensetracker.dto.CreateRecurringTransactionRequest;
+import com.SkillsForge.expensetracker.dto.RecurringTransactionDto;
+import com.SkillsForge.expensetracker.dto.RecurringUpdateBatchRequest;
 
 public interface RecurringTransactionService {
-    TransactionDto createRecurringTransaction(CreateTransactionRequest request);
-    TransactionDto getRecurringTransactionById(Long id);
-    TransactionDto updateRecurringTransaction(Long id, CreateTransactionRequest request);
-    TransactionDto deleteRecurringTransaction(Long id);
-    Page<TransactionDto> getRecurringTransactions(Pageable pageable);
+  RecurringTransactionDto createRecurringTransaction(CreateRecurringTransactionRequest request);
+
+  // only updates the templates for all future transactions
+  RecurringTransactionDto update(Long id, RecurringUpdateBatchRequest request);
+
+  void deactivate(Long id);
+
+  void runExecutionCycle();
 }
